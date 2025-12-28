@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}SpecGenie - Generate Specifications{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-10">
+        <!-- Welcome Card -->
+        <div class="card mb-4">
+            <div class="card-body text-center py-4">
+                <h1 class="display-5 mb-3">🧞 Welcome to SpecGenie</h1>
+                <p class="lead text-muted">
+                    Transform your project ideas into structured specifications.
+                    Enter a natural-language description and get user stories,
+                    entity analysis, and risk assessment instantly.
+                </p>
+            </div>
+        </div>
+
+        <!-- Input Form Card -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">📝 Project Description</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('analyze') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            Describe your project in plain English. Include features,
+                            user types, and functionality.
+                        </label>
+                        <textarea class="form-control" id="description" name="description" rows="10"
+                            placeholder="Example: The system should allow users to register and login. Users can create projects and add tasks. Admins can manage all users and view reports..."
+                            required>{{ description if description else '' }}</textarea>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('demo') }}" class="btn btn-outline-secondary me-md-2">
+                            📋 Load Demo
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            🚀 Generate Specification
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Info Cards Row -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-info">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📖 User Stories</h5>
+                        <p class="card-text text-muted small">
+                            Automatically generates user stories from your description.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-success">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🏗️ UML View</h5>
+                        <p class="card-text text-muted small">
+                            Extracts potential entities and their responsibilities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-warning">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">⚠️ Risk Analysis</h5>
+                        <p class="card-text text-muted small">
+                            Identifies potential risks based on project context.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

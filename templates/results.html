@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}SpecGenie - Analysis Results{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-lg-10">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>📊 Specification Results</h2>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                ← Back to Home
+            </a>
+        </div>
+
+        <!-- Original Description Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">📄 Original Project Description</h5>
+            </div>
+            <div class="card-body">
+                <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ description }}</pre>
+            </div>
+        </div>
+
+        <!-- User Stories Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">📖 Generated User Stories</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    User stories are generated from each sentence in your description,
+                    formatted in the standard Agile format.
+                </p>
+                <ol class="list-group list-group-numbered">
+                    {% for story in user_stories %}
+                    <li class="list-group-item">{{ story }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="card-footer text-muted">
+                Total: {{ user_stories|length }} user stories generated
+            </div>
+        </div>
+
+        <!-- UML Entities Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">🏗️ UML-Like Entity View</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    Entities are extracted based on common domain keywords found in your description.
+                    Each entity is assigned typical responsibilities.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 25%;">Entity</th>
+                                <th>Possible Responsibilities</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entity in entities %}
+                            <tr>
+                                <td><strong>{{ entity.entity }}</strong></td>
+                                <td>{{ entity.responsibilities }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Total: {{ entities|length }} entities identified
+            </div>
+        </div>
+
+        <!-- Risk Analysis Card -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">⚠️ Risk Analysis</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    Risks include generic software risks plus context-specific risks
+                    based on keywords in your description.
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 50%;">Risk</th>
+                                <th style="width: 25%;">Impact</th>
+                                <th style="width: 25%;">Likelihood</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for risk in risks %}
+                            <tr>
+                                <td>{{ risk.risk }}</td>
+                                <td>
+                                    {% if risk.impact == 'High' %}
+                                    <span class="badge bg-danger">{{ risk.impact }}</span>
+                                    {% elif risk.impact == 'Medium' %}
+                                    <span class="badge bg-warning text-dark">{{ risk.impact }}</span>
+                                    {% else %}
+                                    <span class="badge bg-success">{{ risk.impact }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if risk.likelihood == 'High' %}
+                                    <span class="badge bg-danger">{{ risk.likelihood }}</span>
+                                    {% elif risk.likelihood == 'Medium' %}
+                                    <span class="badge bg-warning text-dark">{{ risk.likelihood }}</span>
+                                    {% else %}
+                                    <span class="badge bg-success">{{ risk.likelihood }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Total: {{ risks|length }} risks identified
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-4">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                🔄 Analyze Another Project
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
