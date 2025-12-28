@@ -1,6 +1,6 @@
 # SpecGenie 🧞
 
-A simple specification generator for software projects. Built for a university Software Quality Management course project.
+This repository contains both the SpecGenie prototype and its SQA artefacts (issues, board, audits) used for the Software Quality Management course project.
 
 ## What is SpecGenie?
 
