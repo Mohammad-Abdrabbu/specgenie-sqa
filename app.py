@@ -10,8 +10,9 @@ Created for a university Software Quality Management project.
 """
 
 import re
-from flask import Flask, render_template, request, redirect, url_for, session
-
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
+from fpdf import FPDF
+import io 
 app = Flask(__name__)
 # Secret key for session management (in production, use a secure random key)
 app.secret_key = 'specgenie-demo-secret-key-2024'
@@ -271,6 +272,9 @@ def analyze():
         'risks': risks
     }
     
+    # Store user_stories separately for easy access by export route
+    session['user_stories'] = user_stories
+    
     # Clear demo flag after analysis
     session.pop('demo_description', None)
     
@@ -318,6 +322,40 @@ Users can search and filter their tasks by status or date."""
     session['demo_description'] = sample_description
     
     return redirect(url_for('index'))
+
+
+@app.route('/export_stories_pdf')
+def export_stories_pdf():
+    """
+    Export user stories as a PDF file.
+    Uses the fpdf2 library to generate the PDF.
+    """
+    stories = session.get('user_stories')
+    if not stories:
+        # No stories generated yet, redirect to home
+        return redirect(url_for('index'))
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font('Arial', size=12)
+
+    pdf.cell(0, 10, 'SpecGenie - User Stories', ln=True)
+    pdf.ln(5)
+
+    for s in stories:
+        pdf.multi_cell(0, 8, f'- {s}')
+        pdf.ln(1)
+
+    # Get PDF as bytes - fpdf2 returns bytearray directly
+    pdf_bytes = pdf.output()
+    pdf_stream = io.BytesIO(pdf_bytes)
+
+    return send_file(
+        pdf_stream,
+        as_attachment=True,
+        download_name='specgenie_user_stories.pdf',
+        mimetype='application/pdf',
+    )
 
 
 # =============================================================================
